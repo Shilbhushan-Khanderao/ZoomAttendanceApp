@@ -7,12 +7,17 @@ dotenv.config();
 let accessToken = "";
 let refreshToken = "";
 
-const authorize = () => {
-  return `https://zoom.us/oauth/authorize?response_type=code&client_id=${
-    process.env.ZOOM_CLIENT_ID
-  }&redirect_uri=${encodeURI(process.env.ZOOM_OAUTH_REDIRECT_URI)}`;
+// Helper function for basic auth header
+const getAuthHeader = () => {
+  return "Basic " + Buffer.from(`${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_CLIENT_SECRET}`).toString("base64");
 };
 
+// URL for OAuth authorization
+const authorize = () => {
+  return `https://zoom.us/oauth/authorize?response_type=code&client_id=${process.env.ZOOM_CLIENT_ID}&redirect_uri=${encodeURI(process.env.ZOOM_OAUTH_REDIRECT_URI)}`;
+};
+
+// Exchange authorization code for tokens
 const redirect = async (code) => {
   const data = qs.stringify({
     code: code,
@@ -25,11 +30,7 @@ const redirect = async (code) => {
     url: "https://zoom.us/oauth/token",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " +
-        Buffer.from(
-          `${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_CLIENT_SECRET}`
-        ).toString("base64"),
+      Authorization: getAuthHeader(),
     },
     data: data,
   };
@@ -39,8 +40,8 @@ const redirect = async (code) => {
     accessToken = response.data.access_token;
     refreshToken = response.data.refresh_token;
 
-    console.log("Access Token:", accessToken);
-    console.log("Refresh Token:", refreshToken);
+    console.log("Access Token:", accessToken);  ///to be removed
+    console.log("Refresh Token:", refreshToken); //to be removed
 
     return response.data;
   } catch (error) {
@@ -49,6 +50,7 @@ const redirect = async (code) => {
   }
 };
 
+// Refresh access token using the refresh token
 const refreshAccessToken = async () => {
   const data = qs.stringify({
     grant_type: "refresh_token",
@@ -60,22 +62,18 @@ const refreshAccessToken = async () => {
     url: "https://zoom.us/oauth/token",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " +
-        Buffer.from(
-          `${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_CLIENT_SECRET}`
-        ).toString("base64"),
+      Authorization: getAuthHeader(),
     },
     data: data,
   };
 
   try {
     const response = await axios(config);
-    accessToken = response.access_token;
+    accessToken = response.data.access_token;
     refreshToken = response.data.refresh_token;
 
-    console.log("New Access Token:", accessToken);
-    console.log("New Refresh Token:", refreshToken);
+    console.log("New Access Token:", accessToken);  //to be removed
+    console.log("New Refresh Token:", refreshToken); //to be removed
 
     return response.data;
   } catch (error) {
@@ -84,6 +82,7 @@ const refreshAccessToken = async () => {
   }
 };
 
+// Fetch meetings for a user
 const meetings = async (jwt_token) => {
   try {
     const response = await axios.request({
@@ -92,12 +91,13 @@ const meetings = async (jwt_token) => {
         Authorization: `Bearer ${jwt_token}`,
       },
     });
-    return response.data; // Access data directly from response
+    return response.data;
   } catch (error) {
     throw error; // Re-throw the error for caller to handle
   }
 };
 
+// Fetch instances of a past meeting
 const meetingInstances = async (jwt_token) => {
   try {
     const response = await axios.request({
@@ -112,6 +112,7 @@ const meetingInstances = async (jwt_token) => {
   }
 };
 
+// Fetch participants of a past meeting
 const participants = async (jwt_token) => {
   const options = {
     method: "GET",
@@ -123,12 +124,11 @@ const participants = async (jwt_token) => {
 
   try {
     const response = await axios.get(options.url, options);
-    console.log(response.data);
+    console.log(response.data); //to be removed
     return response;
   } catch (error) {
     console.error(error);
   }
-  // return response;
 };
 
 export {
