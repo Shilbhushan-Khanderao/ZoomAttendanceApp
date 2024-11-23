@@ -12,6 +12,7 @@ const Dashboard = () => {
     const getMeetings = async () => {
       try {
         const response = await fetchMeetings();
+        console.log(response)
         setMeetings(response.meetings);
       } catch (error) {
         setError("Failed to fetch meetings.");

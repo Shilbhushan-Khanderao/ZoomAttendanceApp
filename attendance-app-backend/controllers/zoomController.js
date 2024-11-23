@@ -79,8 +79,9 @@ export const getMeetings = async (req, res) => {
 export const getMeetingInstances = async (req, res) => {
   try {
     const meetingId = req.params.id;
+    console.log(meetingId)
     const accessToken = await zoomService.getValidAccessToken();
-    const meetings = await zoomService.getMeetings(accessToken, meetingId);
+    const meetings = await zoomService.meetingInstances(accessToken, meetingId);
     
     res.json(meetings);
   } catch (error) {

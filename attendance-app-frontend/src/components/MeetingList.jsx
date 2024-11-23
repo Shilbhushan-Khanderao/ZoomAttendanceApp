@@ -8,7 +8,7 @@ const MeetingsList = ({ meetings }) => {
     try {
       const response = await fetchMeetingInstances(id);
       console.log(response);
-      setMeetingInstances(response)
+      setMeetingInstances(response.meetings)
     } catch (error) {
       console.log("Error in fetching meeting instances: ", error)
       throw Error("Error in getting Meeting instances: ", error)

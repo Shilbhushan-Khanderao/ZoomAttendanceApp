@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import Login from "./components/Login";
-import Dashboard from "./components/Dashboard";
-import ErrorPage from "./components/ErrorPage";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Meeting from "./pages/Meeting";
+import Attendance from "./pages/Attendance";
 
 function App() {
   const [authStatus, setAuthStatus] = useState(false);
   const [accessToken, setAccessToken] = useState(null);
-  // add logic to get meeting, get token data from backend to frontend.
-  // more components to be add.
 
   const fetchToken = async () =>{
     try {
@@ -35,9 +36,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={authStatus ? <Dashboard /> : <Login />} />
-        <Route path="/error" element={<ErrorPage />} />
-        <Route path="/dashboard" element={authStatus ? <Dashboard /> : <Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/meeting" element={<Meeting/>}/>
+        <Route path="/attendance" element={<Attendance/>}/>
       </Routes>
     </Router>
   );

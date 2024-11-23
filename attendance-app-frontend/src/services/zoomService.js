@@ -13,7 +13,8 @@ export const fetchMeetings = async () => {
 };
 
 export const fetchMeetingInstances = async (id) => {
-  const response = await fetch(`${API_URL}/instances/:id`, {
+  console.log(id)
+  const response = await fetch(`${API_URL}/instances/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

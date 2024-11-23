@@ -25,7 +25,7 @@ app.get("/api/zoom/redirect", zoomRedirect);
 app.get("/api/zoom/meeting", getMeetings);
 app.get("/api/zoom/participants", getParticipants);
 app.get('/api/zoom/token', getToken); // This will provide the stored token to the frontend
-app.get('/api/zoom/instances', getMeetingInstances)
+app.get('/api/zoom/instances/:id', getMeetingInstances)
 
 
 
