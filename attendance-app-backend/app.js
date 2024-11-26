@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-import { zoomAuth, zoomRedirect, getToken, getMeetings, getParticipants, getMeetingInstances } from "./controllers/zoomController.js";
+import { zoomAuth, zoomRedirect, getToken, getMeetings, getParticipants, fetchMeetingInstances } from "./controllers/zoomController.js";
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -25,7 +25,7 @@ app.get("/api/zoom/redirect", zoomRedirect);
 app.get("/api/zoom/meeting", getMeetings);
 app.get("/api/zoom/participants", getParticipants);
 app.get('/api/zoom/token', getToken); // This will provide the stored token to the frontend
-app.get('/api/zoom/instances/:id', getMeetingInstances)
+app.get('/api/zoom/instances/:id', fetchMeetingInstances)
 
 
 

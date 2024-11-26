@@ -1,32 +1,92 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { fetchMeetingInstances, fetchMeetings } from "../services/zoomService";
+import Loading from "../components/Loading.jsx";
+import MeetingList from "../components/MeetingList.jsx";
+import InstancesList from "../components/InstancesList.jsx";
 
 const Dashboard = () => {
-  
+  const [meetings, setMeetings] = useState([]);
+  const [instances, setInstances] = useState([])
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedMeeting, setSelectedMeeting] = useState(null);
+
+  const getMeetings = async () => {
+    try {
+      const response = await fetchMeetings();
+      console.log(response);
+      setMeetings(response.meetings);
+    } catch (error) {
+      setError("Failed to fetch meetings.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectMeeting = async (meetingId) =>{
+    setLoading(true)
+    setSelectedMeeting(meetingId)
+    try {
+      const response = await fetchMeetingInstances(meetingId)
+      setInstances(response.meetings)
+    } catch (error) {
+      setError("Failed to fetch meeting instances.")
+    } finally{
+      setLoading(false)
+    }
+  }
+
+  const handleSelectInstance = async (instanceId) =>{
+    console.log('Select Instance Called')
+  }
+
+  useEffect(() => {
+    getMeetings();
+  }, []);
+
+  if (loading) return <Loading />;
+  if (error) return <div>{error}</div>;
+
   return (
-    <div className="flex min-h-screen bg-neutral-900 text-white">
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Content Area */}
-        <main className="p-6">
-          <h2 className="text-2xl font-bold">Dashboard</h2>
-          <p className="mt-4 text-gray-300">
-            This is where you can add widgets, stats, or charts to display relevant data.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-            <div className="p-4 bg-gray-700 rounded-md">
-              <h3 className="text-lg font-semibold">Meetings</h3>
-              <p className="mt-2 text-gray-300">Get List of Meetings and populate attendance</p>
-              <button className="p-2 bg-green-500 hover:bg-green-700 text-black rounded mt-2"><Link to="/meeting">Visit</Link></button>
-            </div>
-            <div className="p-4 bg-gray-700 rounded-md">
-              <h3 className="text-lg font-semibold">Attendance</h3>
-              <p className="mt-2 text-gray-300">Check attendance of students and view</p>
-              <button className="p-2 bg-green-500 hover:bg-green-700 text-black rounded mt-2"><Link to="/attendance">Visit</Link></button>
-            </div>
-          </div>
-        </main>
-      </div>
+    <div className="p-6 bg-neutral-900 min-h-screen text-white">
+      <h1 className="text-2xl font-bold mb-4">Zoom Meetings Dashboard</h1>
+
+      {/* Meetings List */}
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold">Meetings</h2>
+        {meetings.length === 0 ? (
+          <p>No meetings available.</p>
+        ) : (
+          <MeetingList
+            meetings={meetings}
+            onSelectMeeting={handleSelectMeeting}
+          />
+        )}
+      </section>
+
+      {/* Meeting Instances */}
+      {selectedMeeting && (
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold">Meeting Instances</h2>
+          <h3 className="text-lg font-semibold"> Total : {instances.length}</h3>
+          {instances.length === 0 ? (
+            <p>No instances available for this meeting.</p>
+          ) : (
+            <InstancesList
+              instances={instances}
+              onSelectInstance={handleSelectInstance}
+            />
+          )}
+        </section>
+      )}
+
+      {/* Attendance Dashboard
+      {attendance.length > 0 && (
+        <section>
+          <h2 className="text-xl font-semibold">Attendance Dashboard</h2>
+          <AttendanceDashboard attendance={attendance} />
+        </section>
+      )} */}
     </div>
   );
 };

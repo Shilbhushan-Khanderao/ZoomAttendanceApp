@@ -76,12 +76,12 @@ export const getMeetings = async (req, res) => {
 };
 
 //Get Instatnces of a Meeting
-export const getMeetingInstances = async (req, res) => {
+export const fetchMeetingInstances = async (req, res) => {
   try {
     const meetingId = req.params.id;
     console.log(meetingId)
     const accessToken = await zoomService.getValidAccessToken();
-    const meetings = await zoomService.meetingInstances(accessToken, meetingId);
+    const meetings = await zoomService.fetchMeetingInstances(accessToken, meetingId);
     
     res.json(meetings);
   } catch (error) {

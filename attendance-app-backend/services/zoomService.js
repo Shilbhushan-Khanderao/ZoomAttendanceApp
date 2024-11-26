@@ -91,7 +91,7 @@ export const getMeetings = async (jwt_token) => {
 };
 
 // Fetch instances of a past meeting
-export const meetingInstances = async (jwt_token, meetingId) => {
+export const fetchMeetingInstances = async (jwt_token, meetingId) => {
   try {
     const response = await axios.request({
       url: `https://api.zoom.us/v2/past_meetings/${meetingId}/instances`,
