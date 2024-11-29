@@ -110,7 +110,7 @@ export const getParticipants = async (jwt_token, meetingId) => {
   try {
     const response = await axios.request({
       method: "get",
-      url: `https://api.zoom.us/v2/meetings/${meetingId}/participants`,
+      url: `https://api.zoom.us/v2/meetings/${encodeURI(meetingId)}/participants`,
       headers: {
         Authorization: `Bearer ${jwt_token}`,
       },

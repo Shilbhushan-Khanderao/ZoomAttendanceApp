@@ -13,7 +13,7 @@ export const fetchMeetings = async () => {
 };
 
 export const fetchMeetingInstances = async (id) => {
-  console.log(id)
+  console.log(id);
   const response = await fetch(`${API_URL}/instances/${id}`, {
     method: "GET",
     headers: {
@@ -25,4 +25,15 @@ export const fetchMeetingInstances = async (id) => {
   return response.json();
 };
 
-// You can create similar functions for fetching participants, etc.
+export const fetchParticipants = async (id) => {
+  console.log(id);
+  const response = await fetch(`${API_URL}/api/zoom/participants/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  if (!response.ok) throw new Error("Failed to fetch participants.");
+  return response.json();
+};

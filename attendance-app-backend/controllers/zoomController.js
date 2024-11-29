@@ -93,8 +93,9 @@ export const fetchMeetingInstances = async (req, res) => {
 // Get Participants
 export const getParticipants = async (req, res) => {
   try {
+    const meetingId = req.params.id
     const accessToken = await zoomService.getValidAccessToken();
-    const participantsList = await zoomService.getParticipants(accessToken, req.query.meetingId);
+    const participantsList = await zoomService.getParticipants(accessToken, meetingId);
     res.json(participantsList);
   } catch (error) {
     console.error("Error fetching participants: ", error);
